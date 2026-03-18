@@ -1,0 +1,46 @@
+import java.util.*;
+
+public class Solution {
+
+    static final int MOD = 1000000007;
+    static final int MAX = 26;
+
+    public static int shortPalindrome(String s) {
+        long[] count1 = new long[MAX];          // single chars
+        long[][] count2 = new long[MAX][MAX];   // pairs
+        long[][] count3 = new long[MAX][MAX];   // triplets
+
+        long result = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            int x = s.charAt(i) - 'a';
+
+            // Step 1: complete quadruples
+            for (int j = 0; j < MAX; j++) {
+                result = (result + count3[x][j]) % MOD;
+            }
+
+            // Step 2: update triplets
+            for (int j = 0; j < MAX; j++) {
+                count3[j][x] = (count3[j][x] + count2[j][x]) % MOD;
+            }
+
+            // Step 3: update pairs
+            for (int j = 0; j < MAX; j++) {
+                count2[j][x] = (count2[j][x] + count1[j]) % MOD;
+            }
+
+            // Step 4: update single characters
+            count1[x]++;
+        }
+
+        return (int) result;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.next();
+        System.out.println(shortPalindrome(s));
+        sc.close();
+    }
+}
